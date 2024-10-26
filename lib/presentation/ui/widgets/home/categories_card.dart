@@ -1,13 +1,16 @@
 import 'package:crafty_bay/data/models/category_model.dart';
 import 'package:crafty_bay/presentation/ui/screen/product_list_screen.dart';
+
 import 'package:crafty_bay/presentation/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CategoriesCard extends StatelessWidget {
-  const CategoriesCard({
-    super.key, required this.categoryModel,
+class CategoryCard extends StatelessWidget {
+  const CategoryCard({
+    super.key,
+    required this.categoryModel,
   });
+
   final CategoryModel categoryModel;
 
   @override
@@ -15,7 +18,7 @@ class CategoriesCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          () =>  ProductListScreen(CategoryName: categoryModel.categoryName ?? ''),
+          () => ProductListScreen(category: categoryModel),
         );
       },
       child: Column(
@@ -23,16 +26,20 @@ class CategoriesCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: AppColors.themeColor.withOpacity(0.2),
+                color: AppColors.themeColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10)),
-            child: Image.network(categoryModel.categoryImg ?? '')
+            child: Image.network(
+              categoryModel.categoryImg ?? '',
+              width: 48,
+              height: 48,
+            ),
           ),
-          const SizedBox(
-            height: 4,
-          ),
-           Text(
+          const SizedBox(height: 4),
+          Text(
             categoryModel.categoryName ?? '',
-            style:const  TextStyle(color: AppColors.themeColor),
+            style: const TextStyle(
+              color: AppColors.themeColor,
+            ),
           )
         ],
       ),

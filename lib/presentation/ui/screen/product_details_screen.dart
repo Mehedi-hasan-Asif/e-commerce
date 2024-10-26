@@ -1,80 +1,120 @@
-import 'package:crafty_bay/presentation/ui/widgets/colors_picker.dart';
+import 'package:crafty_bay/data/models/product_details_model.dart';
+
+import 'package:crafty_bay/presentation/stateholder/add_to_cart_controller.dart';
+import 'package:crafty_bay/presentation/stateholder/auth_controller.dart';
+import 'package:crafty_bay/presentation/stateholder/product_details_controller.dart';
+import 'package:crafty_bay/presentation/ui/screen/email_verification_screen.dart';
+
+import 'package:crafty_bay/presentation/ui/widgets/center_circullarProgress_indicator.dart';
+
 import 'package:crafty_bay/presentation/ui/widgets/product_image_slider.dart';
 import 'package:crafty_bay/presentation/ui/widgets/size_picker.dart';
 import 'package:crafty_bay/presentation/utils/app_colors.dart';
+import 'package:crafty_bay/presentation/utils/snack_message.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  const ProductDetailsScreen({super.key, required this.productId});
+
+  final int productId;
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  String _selectedColor = '';
+  String _selectedSize = '';
+  int quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<ProductDetailsController>().getProductDetails(widget.productId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildProductDetails(),
-          ),
-          _buildPriceAndAddToCardSection()
-        ],
-      ),
+      body: GetBuilder<ProductDetailsController>(
+          builder: (productDetailsController) {
+        if (productDetailsController.inProgress) {
+          return const CenteredCircularProgressIndicator();
+        }
+
+        if (productDetailsController.errorMessage != null) {
+          return Center(
+            child: Text(productDetailsController.errorMessage!),
+          );
+        }
+
+        return Column(
+          children: [
+            Expanded(
+              child: _buildProductDetails(productDetailsController.product!),
+            ),
+            _buildPriceAndAddToCartSection(productDetailsController.product!)
+          ],
+        );
+      }),
     );
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(ProductDetailsModel product) {
+    List<String> colors = product.color!.split(',');
+    List<String> sizes = product.size!.split(',');
+    _selectedColor = colors.first;
+    _selectedSize = sizes.first;
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          const ProductImageSlider(),
+          ProductImageSlider(
+            sliderUrls: [
+              product.img1!,
+              product.img2!,
+              product.img3!,
+              product.img4!,
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildNameAndQuantitySection(),
-                const SizedBox(
-                  height: 4,
-                ),
-                _buildRatingAndReviewSystem(),
-                const SizedBox(
-                  height: 8,
-                ),
-                ColorPicker(
-                  colors: const [
-                    Colors.yellow,
-                    Colors.blue,
-                    Colors.red,
-                    Colors.green
-                  ],
-                  onSelectedColors: (color) {},
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
+                _buildNameAndQuantitySection(product),
+                const SizedBox(height: 4),
+                _buildRatingAndReviewSection(product),
+                const SizedBox(height: 8),
+                // ColorPicker(
+                //   colors: const [
+                //     Colors.red,
+                //     Colors.green,
+                //     Colors.yellow,
+                //     Colors.black,
+                //   ],
+                //   onColorSelected: (color) {},
+                // ),
                 SizePicker(
-                  sizes: const ['M', 'L', 'XL', 'XXL'],
-                  onSizeSelected: (String selectedSize) {},
+                  sizes: colors,
+                  onSizeSelected: (String selectedColor) {
+                    _selectedColor = selectedColor;
+                  },
                 ),
-                const SizedBox(
-                  height: 16,
+                const SizedBox(height: 16),
+                SizePicker(
+                  sizes: sizes,
+                  onSizeSelected: (String selectedSize) {
+                    _selectedSize = selectedSize;
+                  },
                 ),
-                _buildDescriptionSection(),
-                const SizedBox(
-                  height: 8,
-                ),
-                const Text(
-                  '''Step into effortless style and comfort with our Stylish Comfort Sneakers. Perfect for everyday wear, these shoes combine modern design with practical features, making them your go-to footwear for any occasion.Made with lightweight, breathable materials to keep your feet cool.Extra padding for all-day comfort, perfect for long walks or standing.Non-slip rubber sole for excellent traction on various surfaces.Feel free to adjust any details to better fit your brand or product! If you have specific features or a target audience in mind, I can refine the description further. ''',
-                  style: TextStyle(color: Colors.black54),
-                )
+                const SizedBox(height: 16),
+                _buildDescriptionSection(product)
               ],
             ),
           ),
@@ -83,59 +123,64 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Column _buildDescriptionSection() {
+  Widget _buildDescriptionSection(ProductDetailsModel productDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Description",
+          'Description',
           style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          productDetails.product?.shortDes ?? '',
+          style: const TextStyle(color: Colors.black45),
         ),
       ],
     );
   }
 
-  Row _buildNameAndQuantitySection() {
+  Widget _buildNameAndQuantitySection(ProductDetailsModel productDetails) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Text(
-            'Nike Shoe 2024 latest model-New year special deal',
+            productDetails.product?.title ?? '',
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         ItemCount(
-            initialValue: 1,
-            minValue: 1,
-            maxValue: 20,
-            decimalPlaces: 0,
-            color: AppColors.themeColor,
-            onChanged: (value) {}),
+          initialValue: quantity,
+          minValue: 1,
+          maxValue: 20,
+          decimalPlaces: 0,
+          color: AppColors.themeColor,
+          onChanged: (value) {
+            quantity = value.toInt();
+            setState(() {});
+          },
+        ),
       ],
     );
   }
 
-  Widget _buildRatingAndReviewSystem() {
+  Widget _buildRatingAndReviewSection(ProductDetailsModel productDetails) {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Wrap(
+        Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
+            const Icon(Icons.star, color: Colors.amber),
             Text(
-              '4.9',
-              style:
-                  TextStyle(fontWeight: FontWeight.w500, color: Colors.black54),
-            )
+              '${productDetails.product?.star ?? ''}',
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.black54),
+            ),
           ],
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         TextButton(
           onPressed: () {},
           child: const Text(
@@ -144,16 +189,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 fontWeight: FontWeight.w500, color: AppColors.themeColor),
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         Card(
           color: AppColors.themeColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           child: const Padding(
             padding: EdgeInsets.all(4.0),
             child: Icon(
-              Icons.favorite_border_outlined,
+              Icons.favorite_outline_rounded,
               size: 16,
               color: Colors.white,
             ),
@@ -163,7 +206,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildPriceAndAddToCardSection() {
+  Widget _buildPriceAndAddToCartSection(ProductDetailsModel productDetails) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -175,13 +218,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Price'),
+              const Text('Price'),
               Text(
-                '\$100',
-                style: TextStyle(
+                '\$${productDetails.product?.price}',
+                style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.themeColor),
@@ -189,11 +232,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ],
           ),
           SizedBox(
-              width: 140,
-              child: ElevatedButton(
-                  onPressed: () {}, child: const Text('Add to Cart')))
+            width: 140,
+            child:
+                GetBuilder<AddToCartController>(builder: (addToCartController) {
+              return Visibility(
+                visible: !addToCartController.inProgress,
+                replacement: const CenteredCircularProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: _onTapAddToCart,
+                  child: const Text('Add To Cart'),
+                ),
+              );
+            }),
+          )
         ],
       ),
     );
+  }
+
+  Future<void> _onTapAddToCart() async {
+    bool isLoggedInUser = Get.find<AuthController>().isLoggedInUser();
+    if (isLoggedInUser) {
+      AuthController.accessToken;
+      final result = await Get.find<AddToCartController>().addToCart(
+        widget.productId,
+        _selectedColor,
+        _selectedSize,
+        quantity,
+      );
+      if (result) {
+        if (mounted) {
+          showSnackBarMessage(context, 'Added to cart');
+        }
+      } else {
+        if (mounted) {
+          showSnackBarMessage(
+              context, Get.find<AddToCartController>().errorMessage!, true);
+        }
+      }
+    } else {
+      Get.to(() => const EmailVerificationScreen());
+    }
   }
 }

@@ -11,12 +11,8 @@ class SliderListModel {
     if (json['data'] != null) {
       sliderList = <SliderModel>[];
       json['data'].forEach((v) {
-        sliderList!.add(new SliderModel.fromJson(v));
+        sliderList!.add(SliderModel.fromJson(v));
       });
     }
   }
 }
-
-
-
-

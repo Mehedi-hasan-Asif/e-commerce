@@ -10,11 +10,12 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Card(
       elevation: 1,
       color: Colors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
           _buildProductImage(),
@@ -28,22 +29,23 @@ class CartItemWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Title of Product',
+                            'Title of product',
                             style: textTheme.bodyLarge,
                           ),
-                          _buildProductColorAndSize(textTheme)
+                          _buildColorAndSize(textTheme),
                         ],
                       ),
                     ),
                     IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.grey,
-                        ))
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.grey,
+                      ),
+                    )
                   ],
                 ),
-                _buildPriceAndCounterProduct(textTheme)
+                _buildPriceAndCounter(textTheme)
               ],
             ),
           )
@@ -52,53 +54,51 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
- Widget _buildProductColorAndSize(TextTheme textTheme) {
+  Widget _buildColorAndSize(TextTheme textTheme) {
     return Wrap(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              'Color: Red',
-                              style: textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey),
-                            ),
-                            Text(
-                              'Size:XL',
-                              style: textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey),
-                            ),
-                          ],
-                        );
+      spacing: 8,
+      children: [
+        Text(
+          'Color: Red',
+          style: textTheme.bodySmall?.copyWith(color: Colors.grey),
+        ),
+        Text(
+          'Size: XL',
+          style: textTheme.bodySmall?.copyWith(color: Colors.grey),
+        ),
+      ],
+    );
   }
 
-  Widget _buildPriceAndCounterProduct(TextTheme textTheme) {
+  Widget _buildPriceAndCounter(TextTheme textTheme) {
     return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '\$100',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: AppColors.themeColor),
-                  ),
-                  ItemCount(
-                      initialValue: 1,
-                      minValue: 1,
-                      maxValue: 20,
-                      decimalPlaces: 0,
-                      color: AppColors.themeColor,
-                      onChanged: (value) {}),
-                ],
-              );
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '\$100',
+          style: textTheme.titleMedium?.copyWith(color: AppColors.themeColor),
+        ),
+        ItemCount(
+          initialValue: 1,
+          minValue: 1,
+          maxValue: 20,
+          decimalPlaces: 0,
+          color: AppColors.themeColor,
+          onChanged: (value) {},
+        ),
+      ],
+    );
   }
 
   Widget _buildProductImage() {
     return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            AssetsPath.appLogoDummy,
-            height: 80,
-            width: 80,
-            fit: BoxFit.scaleDown,
-          ),
-        );
+      padding: const EdgeInsets.all(8.0),
+      child: Image.asset(
+        AssetsPath.dummyProductImg,
+        height: 80,
+        width: 80,
+        fit: BoxFit.scaleDown,
+      ),
+    );
   }
 }

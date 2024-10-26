@@ -11,12 +11,8 @@ class CategoryListModel {
     if (json['data'] != null) {
       categoryList = <CategoryModel>[];
       json['data'].forEach((v) {
-        categoryList!.add( CategoryModel.fromJson(v));
+        categoryList!.add(CategoryModel.fromJson(v));
       });
     }
   }
-
-
 }
-
-

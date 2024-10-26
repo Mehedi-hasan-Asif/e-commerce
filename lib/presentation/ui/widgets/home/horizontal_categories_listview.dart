@@ -3,10 +3,11 @@ import 'package:crafty_bay/presentation/ui/widgets/home/categories_card.dart';
 
 import 'package:flutter/material.dart';
 
-class HorizontalCategoriesListView extends StatelessWidget {
-  const HorizontalCategoriesListView({
+class HorizontalCategoryListView extends StatelessWidget {
+  const HorizontalCategoryListView({
     super.key, required this.categoryList,
   });
+
   final List<CategoryModel> categoryList;
 
   @override
@@ -15,14 +16,11 @@ class HorizontalCategoriesListView extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: categoryList.length,
       itemBuilder: (context, index) {
-        return CategoriesCard(
+        return CategoryCard(
           categoryModel: categoryList[index],
         );
       },
-      separatorBuilder: (_, __) => const SizedBox(
-        width: 8,
-      ),
+      separatorBuilder: (_, __) => const SizedBox(width: 8),
     );
   }
 }
-

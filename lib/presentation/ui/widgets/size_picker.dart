@@ -1,4 +1,3 @@
-
 import 'package:crafty_bay/presentation/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -36,12 +35,13 @@ class _SizePickerState extends State<SizePicker> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                     border: Border.all(),
-                    color: _selectedSize == item ? AppColors.themeColor : null
+                    color: _selectedSize == item ? AppColors.themeColor : null),
+                child: Text(
+                  item,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: _selectedSize == item ? Colors.white : null),
                 ),
-                child: Text(item, style: TextStyle(
-                    fontSize: 20,
-                    color: _selectedSize == item ? Colors.white : null
-                ),),
               ),
             );
           }).toList(),

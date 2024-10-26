@@ -6,6 +6,7 @@ class AppBarIconButton extends StatelessWidget {
     required this.onTap,
     required this.iconData,
   });
+
   final VoidCallback onTap;
   final IconData iconData;
 
@@ -16,7 +17,7 @@ class AppBarIconButton extends StatelessWidget {
       child: CircleAvatar(
         radius: 16,
         backgroundColor: Colors.grey.shade200,
-        child:  Icon(
+        child: Icon(
           iconData,
           color: Colors.grey,
           size: 18,

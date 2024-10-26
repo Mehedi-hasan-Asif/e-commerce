@@ -1,11 +1,10 @@
 import 'package:crafty_bay/presentation/stateholder/bottom_nav_bar_controller.dart';
+
 import 'package:crafty_bay/presentation/ui/widgets/cart/cart_item_widget.dart';
 
+import 'package:crafty_bay/presentation/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
-import '../../utils/app_colors.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -15,7 +14,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -27,63 +25,63 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
           title: const Text('Cart'),
-          leading: const IconButton(
-              onPressed: backToHome, icon: Icon(Icons.arrow_back_ios)),
+          leading: IconButton(
+            onPressed: backToHome,
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
         ),
         body: Column(
           children: [
             Expanded(
               child: ListView.builder(
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   return const CartItemWidget();
                 },
-                itemCount: 3,
               ),
             ),
-            _buildPriceAndAddToCardSection()
+            _buildPriceAndAddToCartSection()
           ],
         ),
       ),
     );
   }
-}
 
+  Widget _buildPriceAndAddToCartSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          color: AppColors.themeColor.withOpacity(0.1),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
+          )),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Total Price'),
+              Text(
+                '\$10000',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.themeColor),
+              )
+            ],
+          ),
+          SizedBox(
+              width: 140,
+              child: ElevatedButton(
+                  onPressed: () {}, child: const Text('Checkout')))
+        ],
+      ),
+    );
+  }
 
-
-Widget _buildPriceAndAddToCardSection() {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-        color: AppColors.themeColor.withOpacity(0.1),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-        )),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Total Price'),
-            Text(
-              '\$10000',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.themeColor),
-            )
-          ],
-        ),
-        SizedBox(
-            width: 140,
-            child:
-                ElevatedButton(onPressed: () {}, child: const Text('Checkout')))
-      ],
-    ),
-  );
-}
-
-void backToHome() {
-  Get.find<BottomNavBarController>().backToHome();
+  void backToHome() {
+    Get.find<BottomNavBarController>().backToHome();
+  }
 }

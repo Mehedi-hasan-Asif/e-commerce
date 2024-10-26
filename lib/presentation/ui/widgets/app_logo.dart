@@ -1,9 +1,10 @@
+
 import 'package:crafty_bay/presentation/utils/assets_path.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
-class AppLogo extends StatelessWidget {
-  const AppLogo({
+class AppLogoWidget extends StatelessWidget {
+  const AppLogoWidget({
     super.key,
   });
 

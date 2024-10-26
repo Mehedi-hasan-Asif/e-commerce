@@ -8,14 +8,15 @@ class SliderModel {
   String? createdAt;
   String? updatedAt;
 
-  SliderModel({this.id,
-    this.title,
-    this.shortDes,
-    this.price,
-    this.image,
-    this.productId,
-    this.createdAt,
-    this.updatedAt});
+  SliderModel(
+      {this.id,
+        this.title,
+        this.shortDes,
+        this.price,
+        this.image,
+        this.productId,
+        this.createdAt,
+        this.updatedAt});
 
   SliderModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -27,5 +28,4 @@ class SliderModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
-
 }

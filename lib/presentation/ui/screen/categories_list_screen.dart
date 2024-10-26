@@ -1,13 +1,14 @@
 import 'package:crafty_bay/presentation/stateholder/bottom_nav_bar_controller.dart';
 import 'package:crafty_bay/presentation/stateholder/category_list_controller.dart';
-import 'package:crafty_bay/presentation/ui/widgets/center_circullarProgress_indicator.dart';
-import 'package:crafty_bay/presentation/ui/widgets/home/categories_card.dart';
 
+import 'package:crafty_bay/presentation/ui/widgets/center_circullarProgress_indicator.dart';
+
+import 'package:crafty_bay/presentation/ui/widgets/home/categories_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CategoriesListScreen extends StatelessWidget {
-  const CategoriesListScreen({super.key});
+class CategoryListScreen extends StatelessWidget {
+  const CategoryListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class CategoriesListScreen extends StatelessWidget {
           child: GetBuilder<CategoryListController>(
               builder: (categoryListController) {
             if (categoryListController.inProgress) {
-              return const CenterCircullarprogressIndicator();
+              return const CenteredCircularProgressIndicator();
             } else if (categoryListController.errorMessage != null) {
               return Center(
                 child: Text(categoryListController.errorMessage!),
@@ -45,7 +46,7 @@ class CategoriesListScreen extends StatelessWidget {
                 childAspectRatio: 0.75,
               ),
               itemBuilder: (context, index) {
-                return CategoriesCard(
+                return CategoryCard(
                   categoryModel: categoryListController.categoryList[index],
                 );
               },

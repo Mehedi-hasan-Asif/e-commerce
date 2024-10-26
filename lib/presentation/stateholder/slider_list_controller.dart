@@ -18,7 +18,7 @@ class SliderListController extends GetxController {
     _inProgress = true;
     update();
     final NetworkResponse response =
-        await Get.find<NetworkCaller>().getRequest(url: Urls.slideListUrls);
+        await Get.find<NetworkCaller>().getRequest(url: Urls.sliderListUrl);
     if (response.isSuccess) {
       isSuccess = true;
       _errorMessage = null;
